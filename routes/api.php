@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     // Guest routes
-    Route::post('/register', RegisterController::class)->name('register');
+    Route::post('/register', RegisterController::class)->name('register')->middleware('throttle:auth');
     Route::post('/login', LoginController::class)->name('login')->middleware('throttle:auth');
 
     // Authenticated routes
