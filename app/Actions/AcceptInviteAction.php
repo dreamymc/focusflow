@@ -31,7 +31,9 @@ class AcceptInviteAction
 
         $registrar = app(PermissionRegistrar::class);
         $registrar->setPermissionsTeamId($workspace->id);
-        $user->assignRole($invitation->role->value);
+        
+        $role = \Spatie\Permission\Models\Role::findOrCreate($invitation->role->value, 'web');
+        $user->assignRole($role);
 
         $invitation->delete();
 

@@ -23,11 +23,11 @@ class CreateWorkspaceAction
         $registrar = app(PermissionRegistrar::class);
         $registrar->setPermissionsTeamId($workspace->id);
 
-        Role::findOrCreate(WorkspaceRole::Admin->value);
-        Role::findOrCreate(WorkspaceRole::Member->value);
-        Role::findOrCreate(WorkspaceRole::Viewer->value);
+        $adminRole = Role::findOrCreate(WorkspaceRole::Admin->value, 'web');
+        Role::findOrCreate(WorkspaceRole::Member->value, 'web');
+        Role::findOrCreate(WorkspaceRole::Viewer->value, 'web');
 
-        $user->assignRole(WorkspaceRole::Admin->value);
+        $user->assignRole($adminRole);
 
         return $workspace;
     }

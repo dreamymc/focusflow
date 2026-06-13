@@ -58,12 +58,14 @@ function createWorkspaceWithUser(\App\Enums\WorkspaceRole $role): array
     
     // Set permissions team context
     app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId($workspace->id);
-    \Spatie\Permission\Models\Role::findOrCreate(\App\Enums\WorkspaceRole::Member->value);
-    \Spatie\Permission\Models\Role::findOrCreate(\App\Enums\WorkspaceRole::Viewer->value);
+    $memberRole = \Spatie\Permission\Models\Role::findOrCreate(\App\Enums\WorkspaceRole::Member->value, 'web');
+    $viewerRole = \Spatie\Permission\Models\Role::findOrCreate(\App\Enums\WorkspaceRole::Viewer->value, 'web');
+    $adminRole = \Spatie\Permission\Models\Role::findOrCreate(\App\Enums\WorkspaceRole::Admin->value, 'web');
     
     if ($role !== \App\Enums\WorkspaceRole::Admin) {
-        $user->removeRole(\App\Enums\WorkspaceRole::Admin->value);
-        $user->assignRole($role->value);
+        $user->removeRole($adminRole);
+        $roleToAssign = $role === \App\Enums\WorkspaceRole::Member ? $memberRole : $viewerRole;
+        $user->assignRole($roleToAssign);
         $workspace->users()->updateExistingPivot($user->id, ['role' => $role->value]);
     }
     
