@@ -17,7 +17,7 @@ class WorkspaceController extends Controller
         return WorkspaceResource::collection($request->user()->workspaces);
     }
 
-    public function store(StoreWorkspaceRequest $request, CreateWorkspaceAction $createWorkspaceAction): WorkspaceResource
+    public function store(StoreWorkspaceRequest $request, CreateWorkspaceAction $createWorkspaceAction): \Illuminate\Http\JsonResponse
     {
         $workspace = $createWorkspaceAction->execute(
             $request->validated('name'),
