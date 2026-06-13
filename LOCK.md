@@ -8,7 +8,6 @@
 
 ## Active Sessions
 
-| Terminal | Files | Purpose | Status |
 | — | — | — | — |
 
 ---
