@@ -29,6 +29,7 @@ Route::prefix('v1')->group(function () {
             ->middleware('scope.workspace')
             ->group(function () {
                 Route::post('/invite', [InvitationController::class, 'invite'])->name('workspaces.invite');
+                Route::get('/billing-portal', [WorkspaceController::class, 'billingPortal'])->name('workspaces.billing-portal');
                 Route::apiResource('projects', ProjectController::class);
                 Route::apiResource('projects.tasks', TaskController::class);
                 Route::put('tasks/{task}/move', [TaskController::class, 'move'])->name('tasks.move');

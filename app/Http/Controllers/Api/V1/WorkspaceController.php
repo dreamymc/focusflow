@@ -31,4 +31,13 @@ class WorkspaceController extends Controller
     {
         return new WorkspaceResource($workspace);
     }
+
+    public function billingPortal(Request $request, Workspace $workspace): \Illuminate\Http\JsonResponse
+    {
+        return response()->json([
+            'data' => [
+                'url' => $workspace->billingPortalUrl(url('/'))
+            ]
+        ]);
+    }
 }

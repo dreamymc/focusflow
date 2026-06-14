@@ -188,6 +188,6 @@ npx skills add PauloFelipeM/agent-laravel-skills   # community Laravel skills
 
 > **Update this line as you complete phases.**
 
-`CURRENT PHASE: 3 — Real-Time Features (WebSockets)`
+`CURRENT PHASE: 4 — Integrations (Slack & Stripe)`
 
-Completed phases: 0, 1, 2
+Completed phases: 0, 1, 2, 3
