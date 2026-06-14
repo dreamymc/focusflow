@@ -9,6 +9,7 @@ uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 beforeEach(function () {
     config(['broadcasting.default' => 'reverb']);
+    require base_path('routes/channels.php');
 });
 
 it('authorizes workspace members for workspace channel', function () {
