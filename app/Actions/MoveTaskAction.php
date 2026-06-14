@@ -15,9 +15,7 @@ class MoveTaskAction
             'status' => $status->value,
         ]);
 
-        if (class_exists(\App\Events\TaskMoved::class)) {
-            event(new \App\Events\TaskMoved($task, $previousStatus));
-        }
+        event(new \App\Events\TaskMoved($task, $previousStatus));
 
         return $task;
     }
