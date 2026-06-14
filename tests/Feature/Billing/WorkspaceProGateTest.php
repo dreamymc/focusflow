@@ -18,7 +18,7 @@ it('blocks member invites beyond 3 on the free plan', function () {
 it('allows member invites beyond 3 on the pro plan', function () {
     $workspace = Workspace::factory()->create();
     $workspace->subscriptions()->create([
-        'name' => 'default',
+        'type' => 'default',
         'stripe_id' => 'sub_123',
         'stripe_status' => 'active',
         'stripe_price' => 'price_pro',

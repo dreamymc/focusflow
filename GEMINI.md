@@ -188,6 +188,6 @@ npx skills add PauloFelipeM/agent-laravel-skills   # community Laravel skills
 
 > **Update this line as you complete phases.**
 
-`CURRENT PHASE: 4 — Integrations (Slack & Stripe)`
+`CURRENT PHASE: 5 — Hardening & Test Coverage`
 
-Completed phases: 0, 1, 2, 3
+Completed phases: 0, 1, 2, 3, 4

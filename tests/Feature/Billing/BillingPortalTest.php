@@ -13,9 +13,9 @@ it('returns a billing portal url', function () {
     $workspaceMock->shouldReceive('billingPortalUrl')
         ->andReturn('https://billing.stripe.com/p/session/123');
     
-    // Bind to container or mock app instance to use this mock for route binding if needed
-    // Assuming we can test the API by binding it
-    app()->instance(Workspace::class, $workspaceMock);
+    \Illuminate\Support\Facades\Route::bind('workspace', function ($value) use ($workspaceMock, $workspace) {
+        return $value == $workspace->id ? $workspaceMock : Workspace::findOrFail($value);
+    });
 
     $response = $this->actingAs($user)
         ->getJson("/api/v1/workspaces/{$workspace->id}/billing-portal");

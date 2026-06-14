@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Workspace;
-use App\Actions\Billing\CancelSubscriptionAction;
+use App\Actions\CancelSubscriptionAction;
 
 it('cancels a workspace subscription', function () {
     $action = app(CancelSubscriptionAction::class);

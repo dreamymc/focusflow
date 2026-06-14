@@ -222,9 +222,9 @@
 | 0 — Setup | ✅ Complete | — | v0.1.0-phase-0 |
 | 1 — Auth | ✅ Complete | — | v0.2.0-phase-1 |
 | 2 — API | ✅ Complete | — | v0.3.0-phase-2 |
-| 3 — WebSockets | 🔄 In progress | — | — |
-| 4 — Integrations | ⬜ Not started | — | — |
-| 5 — Hardening | ⬜ Not started | — | — |
+| 3 — WebSockets | ✅ Complete | — | v0.4.0-phase-3 |
+| 4 — Integrations | ✅ Complete | — | v0.5.0-phase-4 |
+| 5 — Hardening | 🔄 In progress | — | — |
 | 6 — Polish | ⬜ Not started | — | — |
 
 > Update status: ⬜ Not started → 🔄 In progress → ✅ Complete

@@ -2,6 +2,11 @@
 
 use App\Models\Workspace;
 use Illuminate\Support\Facades\Http;
+use Laravel\Cashier\Http\Middleware\VerifyWebhookSignature;
+
+beforeEach(function () {
+    $this->withoutMiddleware(VerifyWebhookSignature::class);
+});
 
 it('activates pro plan on successful payment', function () {
     Http::fake(['https://api.stripe.com/*' => Http::response(['status' => 'active'])]);
@@ -32,7 +37,7 @@ it('handles customer subscription deleted', function () {
     $workspace = Workspace::factory()->create(['stripe_id' => 'cus_123']);
     
     $workspace->subscriptions()->create([
-        'name' => 'default',
+        'type' => 'default',
         'stripe_id' => 'sub_123',
         'stripe_status' => 'active',
         'stripe_price' => 'price_pro',

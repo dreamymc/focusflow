@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Workspace;
-use App\Actions\Billing\SubscribeWorkspaceAction;
+use App\Actions\SubscribeWorkspaceAction;
 
 it('subscribes a workspace to a plan', function () {
     $action = app(SubscribeWorkspaceAction::class);
