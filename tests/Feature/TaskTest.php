@@ -273,6 +273,8 @@ it('allows workspace member to move a task status, but denies viewer', function 
         'status' => TaskStatus::Backlog->value,
     ]);
 
+    \Illuminate\Support\Facades\Event::fake([\App\Events\TaskMoved::class]);
+
     $response = $this->actingAs($member)
         ->putJson("/api/v1/workspaces/{$workspace->id}/tasks/{$task->id}/move", [
             'status' => TaskStatus::Done->value,
@@ -285,6 +287,10 @@ it('allows workspace member to move a task status, but denies viewer', function 
         'id' => $task->id,
         'status' => TaskStatus::Done->value,
     ]);
+
+    \Illuminate\Support\Facades\Event::assertDispatched(\App\Events\TaskMoved::class, function ($event) use ($task) {
+        return $event->task->id === $task->id && $event->previousStatus->value === TaskStatus::Backlog->value;
+    });
 
     // Viewer move
     [$workspace2, $viewer] = createWorkspaceWithUser(WorkspaceRole::Viewer);
