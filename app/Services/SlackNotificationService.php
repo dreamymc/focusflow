@@ -8,6 +8,6 @@ class SlackNotificationService
 {
     public function send(string $webhookUrl, array $payload): void
     {
-        Http::post($webhookUrl, $payload);
+        Http::post($webhookUrl, $payload)->throw();
     }
 }

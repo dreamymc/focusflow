@@ -13,6 +13,8 @@ class WeeklyDigestMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
+    public string $queue = 'mail';
+
     public function __construct()
     {
     }
