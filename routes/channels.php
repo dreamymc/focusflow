@@ -9,7 +9,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('workspace.{id}', function (User $user, $id) {
-    return $user->workspaces()->where('id', $id)->exists();
+    return $user->workspaces()->whereKey($id)->exists();
 });
 
 Broadcast::channel('task.{id}', function (User $user, $id) {
@@ -18,7 +18,7 @@ Broadcast::channel('task.{id}', function (User $user, $id) {
         return false;
     }
 
-    if ($user->workspaces()->where('id', $task->workspace_id)->exists()) {
+    if ($user->workspaces()->whereKey($task->workspace_id)->exists()) {
         return ['id' => $user->id, 'name' => $user->name, 'email' => $user->email];
     }
 

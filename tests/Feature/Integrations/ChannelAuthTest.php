@@ -7,6 +7,10 @@ use App\Models\Workspace;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
+beforeEach(function () {
+    config(['broadcasting.default' => 'reverb']);
+});
+
 it('authorizes workspace members for workspace channel', function () {
     $workspace = Workspace::factory()->create();
     $member = User::factory()->create();
