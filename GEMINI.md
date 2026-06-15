@@ -187,7 +187,12 @@ npx skills add PauloFelipeM/agent-laravel-skills   # community Laravel skills
 ## 🧭 Current Phase
 
 > **Update this line as you complete phases.**
+> ⚠️ There are TWO plan files in this repo:
+> - **`PLAN.md`** = Backend API build plan (Phases 0–6) — **COMPLETE**. Do not modify task status here.
+> - **`focusflow_plan.md`** = Frontend (Inertia.js + Vue 3) build plan (Phases 0–9) — **IN PROGRESS**. This is the active plan.
 
-`CURRENT PHASE: 5 — Hardening & Test Coverage`
+`CURRENT PHASE: Frontend Phase 3 — Workspaces`
 
-Completed phases: 0, 1, 2, 3, 4
+Completed frontend phases: 0 (Foundation), 1 (Auth Pages), 2 (App Shell)
+
+Next: Phase 3 — Workspace creation flow, settings page, member management, invite modal.

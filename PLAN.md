@@ -1,5 +1,8 @@
-# FocusFlow — Phased Build Plan
+# FocusFlow — Backend API Build Plan
 
+> ⚠️ **This file tracks the BACKEND only (Laravel REST API, WebSockets, Billing).**
+> The **frontend (Inertia.js + Vue 3)** is tracked in [`focusflow_plan.md`](./focusflow_plan.md).
+>
 > **How to use this file:**
 > - Read GEMINI.md first. Always.
 > - Update `[ ]` → `[x]` as tasks complete.
@@ -215,16 +218,18 @@
 
 ---
 
-## 📊 Progress Tracker
+## 📊 Backend Progress Tracker
 
-| Phase | Status | Commit | Tag |
-|-------|--------|--------|-----|
-| 0 — Setup | ✅ Complete | — | v0.1.0-phase-0 |
-| 1 — Auth | ✅ Complete | — | v0.2.0-phase-1 |
-| 2 — API | ✅ Complete | — | v0.3.0-phase-2 |
-| 3 — WebSockets | ✅ Complete | — | v0.4.0-phase-3 |
-| 4 — Integrations | ✅ Complete | — | v0.5.0-phase-4 |
-| 5 — Hardening | ✅ Complete | — | v0.6.0-phase-5 |
-| 6 — Polish | ✅ Complete | — | v1.0.0 |
+| Phase | Status | Tag |
+|-------|--------|-----|
+| 0 — Setup & Scaffolding | ✅ Complete | v0.1.0-phase-0 |
+| 1 — Auth & Multi-Tenancy | ✅ Complete | v0.2.0-phase-1 |
+| 2 — Task Management (REST API) | ✅ Complete | v0.3.0-phase-2 |
+| 3 — Real-Time (WebSockets) | ✅ Complete | v0.4.0-phase-3 |
+| 4 — Integrations & Billing | ✅ Complete | v0.5.0-phase-4 |
+| 5 — Hardening & Test Coverage | ✅ Complete | v0.6.0-phase-5 |
+| 6 — Portfolio Polish | ✅ Complete | v1.0.0 |
+
+> ✅ **Backend is fully complete.** See [`focusflow_plan.md`](./focusflow_plan.md) for frontend progress.
 
 > Update status: ⬜ Not started → 🔄 In progress → ✅ Complete
