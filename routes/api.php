@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\V1\ProjectController;
 use App\Http\Controllers\Api\V1\TaskController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->name('api.v1.')->group(function () {
     // Guest routes
     Route::post('/register', RegisterController::class)->name('register')->middleware('throttle:auth');
     Route::post('/login', LoginController::class)->name('login')->middleware('throttle:auth');
