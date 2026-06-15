@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Workspace;
 use App\Actions\CreateWorkspaceAction;
 use App\Actions\InviteMemberAction;
+use App\Actions\UpdateWorkspaceAction;
 use App\Enums\WorkspaceRole;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -52,7 +53,7 @@ class WorkspaceController extends Controller
         ]);
     }
 
-    public function update(Request $request, Workspace $workspace)
+    public function update(Request $request, Workspace $workspace, UpdateWorkspaceAction $updateWorkspaceAction)
     {
         if (!$request->user()->hasRole(WorkspaceRole::Admin->value)) {
             abort(403, 'Only workspace admins can update workspace.');
@@ -62,7 +63,7 @@ class WorkspaceController extends Controller
             'name' => ['required', 'string', 'max:255'],
         ]);
 
-        $workspace->update($validated);
+        $updateWorkspaceAction->execute($workspace, $validated['name']);
 
         return redirect()->route('workspaces.settings', $workspace)->with('success', 'Workspace updated successfully.');
     }

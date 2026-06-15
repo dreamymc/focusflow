@@ -8,7 +8,7 @@ const form = useForm({
 });
 
 const submit = () => {
-  form.post(route('workspaces.store'), {
+  form.post('/workspaces', {
     onError: () => {
       // Errors handled by form.errors
     }

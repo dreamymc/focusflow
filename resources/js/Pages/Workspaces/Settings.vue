@@ -22,7 +22,7 @@ const generalForm = useForm({
 });
 
 const saveGeneral = () => {
-  generalForm.put(route('workspaces.update', props.workspace.id), {
+  generalForm.put('/workspaces/' + props.workspace.id, {
     onSuccess: () => {
       toast.success('Workspace name updated!');
     },
@@ -51,7 +51,7 @@ const deleteWorkspace = () => {
       </div>
 
       <!-- General Settings Card -->
-      <div class="rounded-lg border border-border bg-surface p-6 shadow-sm">
+      <div class="rounded-lg border border-border bg-surface p-4 sm:p-6 shadow-sm">
         <h2 class="font-display text-lg font-semibold text-text mb-4">General Settings</h2>
         <form @submit.prevent="saveGeneral" class="space-y-4">
           <div>
@@ -84,8 +84,8 @@ const deleteWorkspace = () => {
       </div>
 
       <!-- Members Card -->
-      <div id="members" class="rounded-lg border border-border bg-surface p-6 shadow-sm">
-        <div class="flex items-center justify-between mb-6">
+      <div id="members" class="rounded-lg border border-border bg-surface p-4 sm:p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <h2 class="font-display text-lg font-semibold text-text">Team Members</h2>
             <p class="text-xs text-text-secondary mt-0.5">
@@ -98,7 +98,7 @@ const deleteWorkspace = () => {
       </div>
 
       <!-- Danger Zone -->
-      <div class="rounded-lg border border-accent-red/30 bg-surface p-6 shadow-sm">
+      <div class="rounded-lg border border-accent-red/30 bg-surface p-4 sm:p-6 shadow-sm">
         <h2 class="font-display text-lg font-semibold text-accent-red mb-2">Danger Zone</h2>
         <p class="text-sm text-text-secondary mb-4">
           Once you delete a workspace, there is no going back. Please be certain.
@@ -111,8 +111,8 @@ const deleteWorkspace = () => {
           >
             Delete Workspace
           </button>
-          <div v-else class="flex items-center gap-2">
-            <span class="text-sm text-text font-medium">Are you absolutely sure?</span>
+          <div v-else class="flex flex-col sm:flex-row sm:items-center gap-3">
+            <span class="text-sm text-text font-medium text-center sm:text-left">Are you absolutely sure?</span>
             <button
               @click="deleteWorkspace"
               class="inline-flex items-center justify-center rounded-md bg-accent-red hover:bg-accent-red/90 text-white px-4 py-2 text-sm font-medium transition-colors"

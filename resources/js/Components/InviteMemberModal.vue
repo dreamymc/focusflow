@@ -27,7 +27,7 @@ const form = useForm({
 });
 
 const submit = () => {
-  form.post(route('workspaces.invite', props.workspaceId), {
+  form.post('/workspaces/' + props.workspaceId + '/invite', {
     onSuccess: () => {
       isOpen.value = false;
       form.reset();
