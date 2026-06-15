@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { usePermissions } from '../Composables/usePermissions';
 import TaskCard from './TaskCard.vue';
@@ -63,8 +63,9 @@ const onDragEnd = (event) => {
       :disabled="readOnly"
       @end="onDragEnd"
       :data-column-id="column.id"
-      class="flex-1 overflow-y-auto bg-surface-3/30 border border-transparent rounded-xl p-2 min-h-[450px] transition-all duration-200"
-      ghost-class="opacity-40"
+      draggable=".task-card-wrapper"
+      class="kanban-column-body flex-1 overflow-y-auto bg-surface-3/30 border border-transparent rounded-xl p-2 min-h-[450px] transition-all duration-200"
+      ghost-class="sortable-ghost opacity-40 ghost-class"
       drag-class="rotate-[1deg]"
     >
       <!-- Task Cards -->
@@ -72,6 +73,7 @@ const onDragEnd = (event) => {
         v-for="task in localTasks"
         :key="task.id"
         :data-task-id="task.id"
+        class="task-card-wrapper"
       >
         <TaskCard
           :task="task"
@@ -101,3 +103,13 @@ const onDragEnd = (event) => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.kanban-column-body:has(.sortable-ghost),
+.kanban-column-body:has(.ghost-class) {
+  outline: 2px dashed #3B82F6;
+  outline-offset: -2px;
+  background-color: rgba(59, 130, 246, 0.05) !important;
+}
+</style>
+
