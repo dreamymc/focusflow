@@ -1,7 +1,15 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onBeforeUnmount } from 'vue';
 import { toast } from 'vue-sonner';
 import KanbanColumn from './KanbanColumn.vue';
+
+// Map to track active timeouts per task ID to prevent memory leaks and race conditions
+const activeTimeouts = new Map();
+
+onBeforeUnmount(() => {
+  activeTimeouts.forEach(clearTimeout);
+  activeTimeouts.clear();
+});
 
 const props = defineProps({
   columns: {
@@ -27,7 +35,21 @@ const emit = defineEmits(['task-selected', 'create-task', 'task-moved']);
 const localColumns = ref(JSON.parse(JSON.stringify(props.columns)));
 
 watch(() => props.columns, (newVal) => {
-  localColumns.value = JSON.parse(JSON.stringify(newVal));
+  const updated = JSON.parse(JSON.stringify(newVal));
+  // Preserve shaking status from current localColumns
+  localColumns.value.forEach(col => {
+    col.tasks.forEach(t => {
+      if (t.shaking) {
+        for (const newCol of updated) {
+          const newT = newCol.tasks.find(nt => nt.id === t.id);
+          if (newT) {
+            newT.shaking = true;
+          }
+        }
+      }
+    });
+  });
+  localColumns.value = updated;
 }, { deep: true });
 
 function getCookie(name) {
@@ -82,8 +104,42 @@ const handleTaskMoved = async ({ taskId, fromColumn, toColumn, newIndex, oldInde
     }
   } catch (error) {
     // Revert state
+    let backupTask = null;
+    for (const column of backup) {
+      const task = column.tasks.find(t => t.id === taskId);
+      if (task) {
+        backupTask = task;
+        break;
+      }
+    }
+    if (backupTask) {
+      backupTask.shaking = true;
+    }
+
     localColumns.value = backup;
     emit('task-moved', { taskId, fromColumn: toColumn, toColumn: fromColumn, newIndex: oldIndex, oldIndex: newIndex });
+
+    // Clear any existing active timeout for this task to avoid race conditions
+    if (activeTimeouts.has(taskId)) {
+      clearTimeout(activeTimeouts.get(taskId));
+    }
+
+    // Call setTimeout with a duration of 800ms to clear the shaking flag from the task object
+    const timeoutId = setTimeout(() => {
+      if (backupTask) {
+        backupTask.shaking = false;
+      }
+      for (const col of localColumns.value) {
+        const t = col.tasks.find(task => task.id === taskId);
+        if (t) {
+          t.shaking = false;
+        }
+      }
+      activeTimeouts.delete(taskId);
+    }, 800);
+
+    activeTimeouts.set(taskId, timeoutId);
+
     toast.error('Failed to move task. Reverted changes.');
   }
 };

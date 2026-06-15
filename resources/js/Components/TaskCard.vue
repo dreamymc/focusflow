@@ -74,7 +74,8 @@ const priorityLabel = computed(() => {
     :class="[
       readOnly
         ? 'cursor-default'
-        : 'cursor-grab active:cursor-grabbing hover:shadow-md hover:translate-y-[-1px] hover:border-border-strong'
+        : 'cursor-grab active:cursor-grabbing hover:shadow-md hover:translate-y-[-1px] hover:border-border-strong',
+      task.shaking ? 'animate-shake' : ''
     ]"
     @mousedown="onMouseDown"
     @mouseup="onMouseUp"
@@ -110,3 +111,22 @@ const priorityLabel = computed(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-4px);
+  }
+  40%, 80% {
+    transform: translateX(4px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+  border-color: var(--color-accent-red) !important;
+}
+</style>
