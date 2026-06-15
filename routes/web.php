@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/workspaces/{workspace}/projects', [\App\Http\Controllers\Web\ProjectController::class, 'index'])->name('workspaces.projects.index');
         Route::post('/workspaces/{workspace}/projects', [\App\Http\Controllers\Web\ProjectController::class, 'store'])->name('workspaces.projects.store');
+        Route::get('/workspaces/{workspace}/projects/{project}', [\App\Http\Controllers\Web\KanbanController::class, 'show'])->name('kanban.show');
     });
 });
 
