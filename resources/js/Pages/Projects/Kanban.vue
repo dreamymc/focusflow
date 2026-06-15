@@ -33,6 +33,7 @@ const page = usePage();
 const currentUserId = computed(() => page.props.auth?.user?.id);
 
 const localColumns = ref(structuredClone(props.columns));
+const workspaceChannel = ref(null);
 
 watch(() => props.columns, (newVal) => {
   localColumns.value = structuredClone(newVal);
@@ -70,7 +71,7 @@ const handleTaskMovedEvent = (e) => {
       originalColumn.tasks[taskIndex] = e.task;
     }
 
-    if (selectedTask.value && selectedTask.value.id === e.task.id) {
+    if (!showTaskModal.value && selectedTask.value && selectedTask.value.id === e.task.id) {
       selectedTask.value = e.task;
     }
   }
@@ -115,19 +116,21 @@ const handleTaskCommentedEvent = (e) => {
 
 onMounted(() => {
   if (window.Echo) {
-    const channel = window.Echo.private('workspace.' + props.workspace.id);
-    channel.listen('TaskMoved', handleTaskMovedEvent);
-    channel.listen('TaskAssigned', handleTaskAssignedEvent);
-    channel.listen('TaskCommented', handleTaskCommentedEvent);
+    workspaceChannel.value = window.Echo.private('workspace.' + props.workspace.id);
+    workspaceChannel.value.listen('TaskMoved', handleTaskMovedEvent);
+    workspaceChannel.value.listen('TaskAssigned', handleTaskAssignedEvent);
+    workspaceChannel.value.listen('TaskCommented', handleTaskCommentedEvent);
   }
 });
 
+// Clean up Echo channel on component unmount
 onUnmounted(() => {
-  if (window.Echo) {
-    const channel = window.Echo.private('workspace.' + props.workspace.id);
-    channel.stopListening('TaskMoved', handleTaskMovedEvent);
-    channel.stopListening('TaskAssigned', handleTaskAssignedEvent);
-    channel.stopListening('TaskCommented', handleTaskCommentedEvent);
+  if (window.Echo && workspaceChannel.value) {
+    workspaceChannel.value.stopListening('TaskMoved', handleTaskMovedEvent);
+    workspaceChannel.value.stopListening('TaskAssigned', handleTaskAssignedEvent);
+    workspaceChannel.value.stopListening('TaskCommented', handleTaskCommentedEvent);
+    // Leave the private channel to free server resources
+    workspaceChannel.value.leave();
   }
 });
 

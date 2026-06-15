@@ -4,8 +4,26 @@ use App\Models\User;
 use App\Models\Workspace;
 use App\Enums\WorkspaceRole;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 uses(RefreshDatabase::class);
+
+/**
+ * Attach a user to a workspace with the given role in BOTH:
+ * - the workspace_user pivot table (for WorkspaceScope membership checks)
+ * - the Spatie model_has_roles table (for hasRole() checks in controllers)
+ */
+function attachWithRole(Workspace $workspace, User $user, WorkspaceRole $role): void
+{
+    $workspace->users()->attach($user->id, ['role' => $role->value]);
+
+    $registrar = app(PermissionRegistrar::class);
+    $registrar->setPermissionsTeamId($workspace->id);
+
+    Role::findOrCreate($role->value, 'web');
+    $user->assignRole($role->value);
+}
 
 it('renders workspace creation page', function () {
     $user = User::factory()->create();
@@ -40,7 +58,7 @@ it('creates a workspace via web form and redirects to dashboard', function () {
 it('allows admins to view settings', function () {
     $user = User::factory()->create();
     $workspace = Workspace::factory()->create();
-    $workspace->users()->attach($user, ['role' => WorkspaceRole::Admin->value]);
+    attachWithRole($workspace, $user, WorkspaceRole::Admin);
 
     $response = $this->actingAs($user)
         ->get(route('workspaces.settings', $workspace));
@@ -68,7 +86,7 @@ it('denies members and viewers from settings', function () {
 it('allows admins to update workspace name', function () {
     $user = User::factory()->create();
     $workspace = Workspace::factory()->create(['name' => 'Old Name']);
-    $workspace->users()->attach($user, ['role' => WorkspaceRole::Admin->value]);
+    attachWithRole($workspace, $user, WorkspaceRole::Admin);
 
     $response = $this->actingAs($user)
         ->from(route('workspaces.settings', $workspace))
@@ -84,7 +102,7 @@ it('allows admins to update workspace name', function () {
 it('allows admins to invite members via web form', function () {
     $user = User::factory()->create();
     $workspace = Workspace::factory()->create();
-    $workspace->users()->attach($user, ['role' => WorkspaceRole::Admin->value]);
+    attachWithRole($workspace, $user, WorkspaceRole::Admin);
 
     $response = $this->actingAs($user)
         ->from(route('workspaces.settings', $workspace))

@@ -5,6 +5,8 @@ use App\Models\Workspace;
 use App\Models\Project;
 use App\Enums\WorkspaceRole;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 uses(RefreshDatabase::class);
 
@@ -23,6 +25,12 @@ it('allows admins and members to create a project', function () {
     $user = User::factory()->create();
     $workspace = Workspace::factory()->create();
     $workspace->users()->attach($user, ['role' => WorkspaceRole::Member->value]);
+
+    // Assign Spatie role so ProjectPolicy::create hasRole() check passes
+    $registrar = app(PermissionRegistrar::class);
+    $registrar->setPermissionsTeamId($workspace->id);
+    Role::findOrCreate(WorkspaceRole::Member->value, 'web');
+    $user->assignRole(WorkspaceRole::Member->value);
 
     $response = $this->actingAs($user)
         ->from("/workspaces/{$workspace->id}/projects")
