@@ -1,9 +1,17 @@
 <script setup>
+import { ref, onMounted } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { usePermissions } from '../../Composables/usePermissions';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout.vue';
 import ColorIcon from '../../Components/ColorIcon.vue';
 import CreateProjectModal from '../../Components/CreateProjectModal.vue';
+
+const isLoading = ref(true);
+onMounted(() => {
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 400);
+});
 
 const props = defineProps({
   workspace: {
@@ -35,8 +43,21 @@ const { can } = usePermissions();
         </div>
       </div>
 
+      <!-- Skeleton state -->
+      <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
+        <div v-for="i in 3" :key="i" class="bg-surface border border-border rounded-lg p-6 space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-slate-200 rounded"></div>
+            <div class="space-y-2 flex-1">
+              <div class="h-4 bg-slate-200 rounded w-2/3"></div>
+              <div class="h-3 bg-slate-200 rounded w-1/2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Projects Grid -->
-      <div v-if="projects.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div v-else-if="projects.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Link
           v-for="project in projects"
           :key="project.id"

@@ -114,7 +114,13 @@ const handleTaskCommentedEvent = (e) => {
   toast.info(`New comment on "${e.task.title}": "${e.comment}"`);
 };
 
+const isLoading = ref(true);
+
 onMounted(() => {
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 400);
+
   if (window.Echo) {
     workspaceChannel.value = window.Echo.private('workspace.' + props.workspace.id);
     workspaceChannel.value.listen('TaskMoved', handleTaskMovedEvent);
@@ -265,7 +271,28 @@ const handleTaskDeleted = (taskId) => {
 
       <!-- Kanban Board Container -->
       <div class="flex-1 min-h-0">
+        <!-- Skeleton state -->
+        <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-4 gap-6 animate-pulse h-[60vh]">
+          <div v-for="i in 4" :key="i" class="bg-surface border border-border rounded-xl p-4 flex flex-col h-full space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+              <div class="w-6 h-6 bg-slate-200 rounded-full"></div>
+            </div>
+            <div class="space-y-3 flex-1">
+              <div v-for="j in 2" :key="j" class="bg-slate-100 p-4 rounded-lg space-y-3 border border-border/50">
+                <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+                <div class="h-3 bg-slate-200 rounded w-1/2"></div>
+                <div class="flex items-center justify-between pt-2">
+                  <div class="w-12 h-5 bg-slate-200 rounded-full"></div>
+                  <div class="w-6 h-6 bg-slate-200 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <KanbanBoard
+          v-else
           :columns="localColumns"
           :members="members"
           :read-only="isViewer"

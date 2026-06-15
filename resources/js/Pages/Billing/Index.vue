@@ -1,7 +1,14 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+
+const isLoading = ref(true);
+onMounted(() => {
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 400);
+});
 
 const props = defineProps({
   workspace: {
@@ -31,7 +38,24 @@ const submitPortal = () => {
 
 <template>
   <AuthenticatedLayout title="Billing">
-    <div class="space-y-8 max-w-4xl">
+    <!-- Skeleton state -->
+    <div v-if="isLoading" class="space-y-8 max-w-4xl animate-pulse">
+      <div class="space-y-2">
+        <div class="h-6 bg-slate-200 rounded w-1/4"></div>
+        <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+      </div>
+      <div class="bg-surface border border-border rounded-xl p-8 space-y-4 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-2 flex-1">
+            <div class="h-5 bg-slate-200 rounded w-1/3"></div>
+            <div class="h-4 bg-slate-200 rounded w-2/3"></div>
+          </div>
+          <div class="w-32 h-10 bg-slate-200 rounded"></div>
+        </div>
+      </div>
+    </div>
+
+    <div v-else class="space-y-8 max-w-4xl">
       <!-- Title & Header -->
       <div class="space-y-1">
         <h1 class="text-2xl font-bold font-display text-text-primary tracking-tight">Billing & Subscriptions</h1>

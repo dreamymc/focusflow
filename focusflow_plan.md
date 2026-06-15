@@ -1395,7 +1395,7 @@ ACCEPTANCE CRITERIA:
 | 6 | Task Detail (Modal, presence avatars) | ✅ Complete | — | `v0.6.0-frontend-phase-6` |
 | 7 | Real-Time Wiring (Live updates + toasts) | ✅ Complete | `93f334a` → `2357b87` | `v0.7.0-phase-7` |
 | 8 | Billing (Stripe portal + plan display) | ✅ Complete | `c8c20d5` | `v0.8.0-frontend-phase-8` |
-| 9 | Polish (Skeletons, mobile, transitions) | ⬜ Not started | — | — |
+| 9 | Polish (Skeletons, mobile, transitions) | ✅ Complete | `999a564` | `v0.9.0-frontend-phase-9` |
 
 > Update status: ⬜ Not started → 🔄 In progress → ✅ Complete
 

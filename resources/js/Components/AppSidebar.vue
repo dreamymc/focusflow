@@ -1,10 +1,16 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { usePage, Link, router } from '@inertiajs/vue3';
 import { usePermissions } from '@/Composables/usePermissions';
 import ColorIcon from '@/Components/ColorIcon.vue';
+import { useSidebar } from '@/Composables/useSidebar';
 
 const page = usePage();
+const { isOpen, close } = useSidebar();
+
+watch(() => page.url, () => {
+  close();
+});
 const { role, isAdmin, can } = usePermissions();
 
 // Simple router helper to support template routes without Ziggy dependency
@@ -73,7 +79,10 @@ const isActive = (path) => {
 </script>
 
 <template>
-  <aside class="w-[256px] h-screen bg-surface-sidebar border-r border-border fixed left-0 top-0 flex flex-col justify-between z-30 select-none">
+  <aside 
+    class="w-[256px] h-screen bg-surface-sidebar border-r border-border fixed left-0 top-0 flex flex-col justify-between z-30 select-none transition-transform duration-200 ease-in-out md:translate-x-0"
+    :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
+  >
     <div class="flex flex-col flex-1 overflow-y-auto">
       <!-- Logo Area -->
       <div class="h-14 border-b border-border flex items-center px-6">

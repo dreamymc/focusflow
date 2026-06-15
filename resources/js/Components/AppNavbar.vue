@@ -11,6 +11,8 @@ import {
   DropdownMenuTrigger,
 } from '@/Components/ui/dropdown-menu';
 
+import { useSidebar } from '@/Composables/useSidebar';
+
 defineProps({
   title: {
     type: String,
@@ -21,6 +23,7 @@ defineProps({
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const currentWorkspace = computed(() => page.props.currentWorkspace);
+const { toggle } = useSidebar();
 
 // Simple router helper to support template routes without Ziggy dependency
 const route = (name) => {
@@ -46,10 +49,21 @@ const logout = () => {
 </script>
 
 <template>
-  <header class="h-14 bg-surface border-b border-border flex items-center justify-between px-6 sticky top-0 z-20 select-none">
-    <!-- Page Title -->
-    <div>
-      <h1 class="font-display font-semibold text-lg text-text leading-tight">{{ title }}</h1>
+  <header class="h-14 bg-surface border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-20 select-none">
+    <!-- Left Section: Hamburger + Title -->
+    <div class="flex items-center gap-3">
+      <!-- Hamburger Menu (mobile only) -->
+      <button
+        @click="toggle"
+        class="md:hidden p-1.5 rounded-lg text-text-secondary hover:text-text hover:bg-slate-100 transition-colors cursor-pointer focus:outline-none"
+        aria-label="Toggle Sidebar"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
+
+      <h1 class="font-display font-semibold text-base md:text-lg text-text leading-tight">{{ title }}</h1>
     </div>
 
     <!-- Right Controls -->

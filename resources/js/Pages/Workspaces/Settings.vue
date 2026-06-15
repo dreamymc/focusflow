@@ -1,7 +1,14 @@
 <script setup>
 import { Head, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { toast } from 'vue-sonner';
+
+const isLoading = ref(true);
+onMounted(() => {
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 400);
+});
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout.vue';
 import MemberList from '../../Components/MemberList.vue';
 import InviteMemberModal from '../../Components/InviteMemberModal.vue';
@@ -41,7 +48,23 @@ const deleteWorkspace = () => {
 
 <template>
   <AuthenticatedLayout :title="`${workspace.name} Settings`">
-    <div class="max-w-4xl mx-auto space-y-6">
+    <!-- Skeleton state -->
+    <div v-if="isLoading" class="max-w-4xl mx-auto space-y-6 animate-pulse">
+      <div class="space-y-2">
+        <div class="h-6 bg-slate-200 rounded w-1/4"></div>
+        <div class="h-4 bg-slate-200 rounded w-1/2"></div>
+      </div>
+      <div class="rounded-lg border border-border bg-surface p-6 space-y-4 shadow-sm">
+        <div class="h-5 bg-slate-200 rounded w-1/6"></div>
+        <div class="space-y-2 max-w-md">
+          <div class="h-3 bg-slate-200 rounded w-1/4"></div>
+          <div class="h-10 bg-slate-200 rounded w-full"></div>
+        </div>
+        <div class="h-10 bg-slate-200 rounded w-28"></div>
+      </div>
+    </div>
+
+    <div v-else class="max-w-4xl mx-auto space-y-6">
       <!-- Heading -->
       <div>
         <h1 class="font-display text-2xl font-bold text-text">Workspace Settings</h1>

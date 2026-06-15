@@ -86,9 +86,9 @@ const onDragEnd = (event) => {
       <!-- Empty State inside Column -->
       <div
         v-if="localTasks.length === 0"
-        class="h-full flex items-center justify-center p-8 text-center"
+        class="flex flex-col items-center justify-center py-12 px-4 text-center border-2 border-dashed border-border/40 rounded-lg select-none"
       >
-        <span class="text-xs text-text-muted italic select-none">No tasks here</span>
+        <span class="text-xs font-medium text-text-muted">Drop tasks here</span>
       </div>
     </VueDraggable>
 
