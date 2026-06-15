@@ -1390,8 +1390,8 @@ ACCEPTANCE CRITERIA:
 | 1 | Authentication (Login + Register pages) | ✅ Complete | `cda0b4c` → `3c2dd49` | — |
 | 2 | App Shell (Sidebar, Navbar, Dashboard) | ✅ Complete | `0e33109` → `2c6a936` | `v0.2.0-frontend-phase-2` |
 | 3 | Workspaces (Create, Settings, Members, Invite) | ✅ Complete | `4451d47` → `77c7398` | `v0.3.0-frontend-phase-3` |
-| 4 | Projects (Index, ProjectCard, Create modal) | 🔄 In progress | — | — |
-| 5 | Kanban Board ⭐ (Drag-and-drop board) | ⬜ Not started | — | — |
+| 4 | Projects (Index, ProjectCard, Create modal) | ✅ Complete | `30b32ee` → `f5cb5cb` | `v0.4.0-frontend-phase-4` |
+| 5 | Kanban Board ⭐ (Drag-and-drop board) | 🔄 In progress | — | — |
 | 6 | Task Detail (Modal, presence avatars) | ⬜ Not started | — | — |
 | 7 | Real-Time Wiring (Live updates + toasts) | ⬜ Not started | — | — |
 | 8 | Billing (Stripe portal + plan display) | ⬜ Not started | — | — |
