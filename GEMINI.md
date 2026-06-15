@@ -191,8 +191,8 @@ npx skills add PauloFelipeM/agent-laravel-skills   # community Laravel skills
 > - **`PLAN.md`** = Backend API build plan (Phases 0–6) — **COMPLETE**. Do not modify task status here.
 > - **`focusflow_plan.md`** = Frontend (Inertia.js + Vue 3) build plan (Phases 0–9) — **IN PROGRESS**. This is the active plan.
 
-`CURRENT PHASE: Frontend Phase 3 — Workspaces`
+`CURRENT PHASE: Frontend Phase 4 — Projects`
 
-Completed frontend phases: 0 (Foundation), 1 (Auth Pages), 2 (App Shell)
+Completed frontend phases: 0 (Foundation), 1 (Auth Pages), 2 (App Shell), 3 (Workspaces)
 
-Next: Phase 3 — Workspace creation flow, settings page, member management, invite modal.
+Next: Phase 4 — Project listing page and project creation modal.
