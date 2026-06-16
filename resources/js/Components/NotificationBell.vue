@@ -3,7 +3,7 @@
         <!-- Notification Trigger Button -->
         <button
             @click="toggleDropdown"
-            class="relative p-2 rounded-lg text-text-secondary hover:text-text hover:bg-slate-100 focus:outline-none transition-all duration-200 cursor-pointer bell-jiggle"
+            class="relative p-2 rounded-lg text-text-secondary hover:text-text hover:bg-slate-100/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 active:scale-95 transition-all duration-200 cursor-pointer bell-jiggle"
             aria-label="Notifications"
         >
             <svg

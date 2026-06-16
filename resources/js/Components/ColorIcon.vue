@@ -55,12 +55,30 @@ const colorClasses = computed(() => {
     'gray': 'bg-accent-gray'
   }[computedColor.value] || 'bg-accent-blue';
 });
+
+const shadowStyle = computed(() => {
+  const colorMap = {
+    'red': 'rgba(239, 68, 68, 0.25)',
+    'orange': 'rgba(249, 115, 22, 0.25)',
+    'yellow': 'rgba(245, 158, 11, 0.25)',
+    'green': 'rgba(16, 185, 129, 0.25)',
+    'blue': 'rgba(59, 130, 246, 0.25)',
+    'purple': 'rgba(139, 92, 246, 0.25)',
+    'pink': 'rgba(236, 72, 153, 0.25)',
+    'gray': 'rgba(107, 114, 128, 0.25)'
+  };
+  const colorValue = colorMap[computedColor.value] || 'rgba(59, 130, 246, 0.25)';
+  return {
+    boxShadow: `0 4px 12px ${colorValue}`
+  };
+});
 </script>
 
 <template>
   <div
     class="flex items-center justify-center font-display font-bold text-white select-none shrink-0"
     :class="[sizeClasses, colorClasses]"
+    :style="shadowStyle"
   >
     {{ initial }}
   </div>
