@@ -50,8 +50,7 @@ const submit = () => {
 
     <form @submit.prevent="submit" class="space-y-4">
       <!-- Name -->
-      <div class="space-y-1.5">
-        <Label for="name">Full name</Label>
+      <div class="relative w-full">
         <Input
           id="name"
           type="text"
@@ -59,82 +58,109 @@ const submit = () => {
           required
           autofocus
           autocomplete="name"
-          placeholder="John Doe"
+          placeholder=" "
+          class="peer h-12 pt-5 pb-1 px-3.5 block w-full border-border rounded-md text-text focus:outline-none focus:ring-1 focus:ring-primary text-sm"
           :class="{'border-accent-red': form.errors.name}"
         />
+        <Label
+          for="name"
+          class="absolute left-3.5 top-1.5 text-[10px] text-text-muted transition-all duration-200 pointer-events-none origin-[0]
+                 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-text-muted
+                 peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:text-primary"
+        >
+          Full name
+        </Label>
         <p v-if="form.errors.name" class="text-accent-red text-xs mt-1">
           {{ form.errors.name }}
         </p>
       </div>
 
       <!-- Email Address -->
-      <div class="space-y-1.5">
-        <Label for="email">Email address</Label>
+      <div class="relative w-full">
         <Input
           id="email"
           type="email"
           v-model="form.email"
           required
           autocomplete="username"
-          placeholder="name@example.com"
+          placeholder=" "
+          class="peer h-12 pt-5 pb-1 px-3.5 block w-full border-border rounded-md text-text focus:outline-none focus:ring-1 focus:ring-primary text-sm"
           :class="{'border-accent-red': form.errors.email}"
         />
+        <Label
+          for="email"
+          class="absolute left-3.5 top-1.5 text-[10px] text-text-muted transition-all duration-200 pointer-events-none origin-[0]
+                 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-text-muted
+                 peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:text-primary"
+        >
+          Email address
+        </Label>
         <p v-if="form.errors.email" class="text-accent-red text-xs mt-1">
           {{ form.errors.email }}
         </p>
       </div>
 
       <!-- Password -->
-      <div class="space-y-1.5">
-        <Label for="password">Password</Label>
-        <div class="relative">
-          <Input
-            id="password"
-            :type="showPassword ? 'text' : 'password'"
-            v-model="form.password"
-            required
-            autocomplete="new-password"
-            placeholder="••••••••"
-            class="pr-10"
-            :class="{'border-accent-red': form.errors.password}"
-          />
-          <button
-            type="button"
-            class="absolute inset-y-0 right-0 flex items-center pr-3 text-text-secondary hover:text-text transition"
-            @click="showPassword = !showPassword"
-          >
-            <Eye v-if="!showPassword" class="h-4.5 w-4.5" />
-            <EyeOff v-else class="h-4.5 w-4.5" />
-          </button>
-        </div>
+      <div class="relative w-full">
+        <Input
+          id="password"
+          :type="showPassword ? 'text' : 'password'"
+          v-model="form.password"
+          required
+          autocomplete="new-password"
+          placeholder=" "
+          class="peer h-12 pt-5 pb-1 px-3.5 pr-10 block w-full border-border rounded-md text-text focus:outline-none focus:ring-1 focus:ring-primary text-sm"
+          :class="{'border-accent-red': form.errors.password}"
+        />
+        <Label
+          for="password"
+          class="absolute left-3.5 top-1.5 text-[10px] text-text-muted transition-all duration-200 pointer-events-none origin-[0]
+                 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-text-muted
+                 peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:text-primary"
+        >
+          Password
+        </Label>
+        <button
+          type="button"
+          class="absolute top-1/2 -translate-y-1/2 right-0 flex items-center pr-3.5 text-text-secondary hover:text-text transition"
+          @click="showPassword = !showPassword"
+        >
+          <Eye v-if="!showPassword" class="h-4.5 w-4.5" />
+          <EyeOff v-else class="h-4.5 w-4.5" />
+        </button>
         <p v-if="form.errors.password" class="text-accent-red text-xs mt-1">
           {{ form.errors.password }}
         </p>
       </div>
 
       <!-- Confirm Password -->
-      <div class="space-y-1.5">
-        <Label for="password_confirmation">Confirm Password</Label>
-        <div class="relative">
-          <Input
-            id="password_confirmation"
-            :type="showConfirmPassword ? 'text' : 'password'"
-            v-model="form.password_confirmation"
-            required
-            autocomplete="new-password"
-            placeholder="••••••••"
-            class="pr-10"
-            :class="{'border-accent-red': form.errors.password_confirmation}"
-          />
-          <button
-            type="button"
-            class="absolute inset-y-0 right-0 flex items-center pr-3 text-text-secondary hover:text-text transition"
-            @click="showConfirmPassword = !showConfirmPassword"
-          >
-            <Eye v-if="!showConfirmPassword" class="h-4.5 w-4.5" />
-            <EyeOff v-else class="h-4.5 w-4.5" />
-          </button>
-        </div>
+      <div class="relative w-full">
+        <Input
+          id="password_confirmation"
+          :type="showConfirmPassword ? 'text' : 'password'"
+          v-model="form.password_confirmation"
+          required
+          autocomplete="new-password"
+          placeholder=" "
+          class="peer h-12 pt-5 pb-1 px-3.5 pr-10 block w-full border-border rounded-md text-text focus:outline-none focus:ring-1 focus:ring-primary text-sm"
+          :class="{'border-accent-red': form.errors.password_confirmation}"
+        />
+        <Label
+          for="password_confirmation"
+          class="absolute left-3.5 top-1.5 text-[10px] text-text-muted transition-all duration-200 pointer-events-none origin-[0]
+                 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-text-muted
+                 peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:text-primary"
+        >
+          Confirm Password
+        </Label>
+        <button
+          type="button"
+          class="absolute top-1/2 -translate-y-1/2 right-0 flex items-center pr-3.5 text-text-secondary hover:text-text transition"
+          @click="showConfirmPassword = !showConfirmPassword"
+        >
+          <Eye v-if="!showConfirmPassword" class="h-4.5 w-4.5" />
+          <EyeOff v-else class="h-4.5 w-4.5" />
+        </button>
         <p v-if="form.errors.password_confirmation" class="text-accent-red text-xs mt-1">
           {{ form.errors.password_confirmation }}
         </p>
@@ -144,10 +170,16 @@ const submit = () => {
       <div class="pt-2">
         <Button
           type="submit"
-          class="w-full bg-primary hover:bg-primary-dark text-white font-medium py-2 rounded-md shadow-sm transition"
+          class="w-full h-11 bg-primary hover:bg-primary-dark text-white font-medium rounded-md shadow-sm transition shimmer-btn active:scale-[0.98] flex items-center justify-center"
           :disabled="form.processing"
         >
-          <span v-if="form.processing">Creating account...</span>
+          <span v-if="form.processing" class="flex items-center gap-2">
+            <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+            Creating account...
+          </span>
           <span v-else>Create your account</span>
         </Button>
       </div>
