@@ -24,7 +24,7 @@ class WorkspaceSwitchController extends Controller
 
         $previousUrl = url()->previous();
         $parsedUrl = parse_url($previousUrl);
-        $path = $parsedUrl['path'] ?? '';
+        $path = is_array($parsedUrl) ? ($parsedUrl['path'] ?? '') : '';
 
         // Match /workspaces/{id}(/.*)?
         if (preg_match('#^/workspaces/(\d+)(/.*)?$#', $path, $matches)) {
@@ -39,17 +39,11 @@ class WorkspaceSwitchController extends Controller
                     $newPath = "/workspaces/{$targetWorkspaceId}" . $subPath;
                 }
 
-                // Reconstruct the URL
-                $newUrl = ($parsedUrl['scheme'] ?? 'http') . '://' . ($parsedUrl['host'] ?? 'localhost');
-                if (isset($parsedUrl['port'])) {
-                    $newUrl .= ':' . $parsedUrl['port'];
-                }
-                $newUrl .= $newPath;
-                if (isset($parsedUrl['query'])) {
-                    $newUrl .= '?' . $parsedUrl['query'];
+                if (is_array($parsedUrl) && isset($parsedUrl['query'])) {
+                    $newPath .= '?' . $parsedUrl['query'];
                 }
 
-                return redirect($newUrl)->with('success', 'Workspace switched successfully.');
+                return redirect($newPath)->with('success', 'Workspace switched successfully.');
             }
         }
 

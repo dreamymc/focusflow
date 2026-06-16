@@ -110,3 +110,21 @@ it('redirects to the projects index of the new workspace when switching from a s
     $response->assertSessionHas('current_workspace_id', $workspace2->id);
 });
 
+it('prevents open redirect when the referrer points to an external domain', function () {
+    $user = User::factory()->create();
+    $workspace1 = Workspace::factory()->create();
+    $workspace1->users()->attach($user, ['role' => 'member']);
+    $workspace2 = Workspace::factory()->create();
+    $workspace2->users()->attach($user, ['role' => 'member']);
+
+    $response = $this->actingAs($user)
+        ->from('https://attacker.com/workspaces/' . $workspace1->id . '/projects')
+        ->post('/workspaces/switch', [
+            'workspace_id' => $workspace2->id,
+        ]);
+
+    // Should redirect to a relative/local URL, not to attacker.com
+    $response->assertRedirect('/workspaces/' . $workspace2->id . '/projects');
+    $response->assertSessionHas('current_workspace_id', $workspace2->id);
+});
+
