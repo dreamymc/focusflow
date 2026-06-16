@@ -30,7 +30,7 @@ const { isOpen, close } = useSidebar();
     ></div>
 
     <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col ml-0 md:ml-[256px] min-w-0">
+    <div class="flex-1 flex flex-col ml-0 md:ml-64 min-w-0">
       <!-- Top Navbar -->
       <AppNavbar :title="title" />
 
