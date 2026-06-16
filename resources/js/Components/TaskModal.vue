@@ -68,6 +68,20 @@ const getInitials = (name) => {
   return name.trim().split(/\s+/).map(n => n[0]).slice(0, 2).join('').toUpperCase();
 };
 
+const formatCommentDate = (dateStr) => {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  }) + ' at ' + date.toLocaleTimeString(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+};
+
 const fetchComments = async () => {
   if (!props.task) return;
   commentsLoading.value = true;
@@ -382,24 +396,24 @@ const submitComment = async () => {
 
 <template>
   <Sheet :open="open" @update:open="val => !val && handleClose()">
-    <SheetContent class="w-full sm:max-w-[540px] overflow-y-auto bg-surface border-l border-border p-6 shadow-xl">
+    <SheetContent class="w-full sm:max-w-[560px] overflow-y-auto bg-surface border-l border-border p-6 sm:p-8 shadow-2xl">
       
       <!-- CREATE MODE -->
       <div v-if="mode === 'create'" class="space-y-6">
-        <SheetHeader>
-          <SheetTitle class="font-display text-xl font-bold text-text">Create Task</SheetTitle>
-          <SheetDescription>Add a new task to your project board.</SheetDescription>
+        <SheetHeader class="space-y-1.5">
+          <SheetTitle class="font-display text-2xl font-extrabold text-text tracking-tight">Create Task</SheetTitle>
+          <SheetDescription class="text-sm text-text-muted">Add a new task to your project board.</SheetDescription>
         </SheetHeader>
 
-        <form @submit.prevent="submitCreate" class="space-y-4 pt-4">
+        <form @submit.prevent="submitCreate" class="space-y-5 pt-4 border-t border-border/40">
           <!-- Title -->
-          <div class="space-y-1">
-            <label for="task-title" class="text-sm font-medium text-text-secondary">Task Title</label>
+          <div class="space-y-1.5">
+            <label for="task-title" class="label-uppercase-tracked block">Task Title</label>
             <input
               id="task-title"
               type="text"
               v-model="createForm.title"
-              class="block w-full rounded-md border border-border px-3 py-2 bg-surface text-text shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+              class="block w-full rounded-lg border border-border px-3.5 py-2.5 bg-surface text-sm text-text-secondary shadow-sm hover:border-border-strong focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none"
               placeholder="e.g. Design homepage hero section"
               required
               :disabled="isSaving"
@@ -407,12 +421,12 @@ const submitComment = async () => {
           </div>
 
           <!-- Description -->
-          <div class="space-y-1">
-            <label for="task-desc" class="text-sm font-medium text-text-secondary">Description</label>
+          <div class="space-y-1.5">
+            <label for="task-desc" class="label-uppercase-tracked block">Description</label>
             <textarea
               id="task-desc"
               v-model="createForm.description"
-              class="block w-full rounded-md border border-border px-3 py-2 bg-surface text-text shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none h-28 resize-none"
+              class="block w-full rounded-lg border border-border px-3.5 py-2.5 bg-surface text-sm text-text-secondary shadow-sm hover:border-border-strong focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all h-28 resize-none outline-none"
               placeholder="Provide a detailed task description..."
               :disabled="isSaving"
             />
@@ -421,71 +435,98 @@ const submitComment = async () => {
           <!-- Grid selectors -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- Status -->
-            <div class="space-y-1">
-              <label for="task-status" class="text-sm font-medium text-text-secondary">Status</label>
-              <select
-                id="task-status"
-                v-model="createForm.status"
-                class="block w-full rounded-md border border-border px-3 py-2 bg-surface text-text shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
-                required
-                :disabled="isSaving"
-              >
-                <option value="backlog">Backlog</option>
-                <option value="in_progress">In Progress</option>
-                <option value="in_review">In Review</option>
-                <option value="done">Done</option>
-              </select>
+            <div class="space-y-1.5">
+              <label for="task-status" class="label-uppercase-tracked block">Status</label>
+              <div class="relative">
+                <select
+                  id="task-status"
+                  v-model="createForm.status"
+                  class="appearance-none block w-full rounded-lg border border-border bg-surface pl-3 pr-10 py-2.5 text-sm text-text-secondary hover:border-border-strong focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer disabled:cursor-not-allowed outline-none"
+                  required
+                  :disabled="isSaving"
+                >
+                  <option value="backlog">Backlog</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="in_review">In Review</option>
+                  <option value="done">Done</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <svg class="h-4 w-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
 
             <!-- Priority -->
-            <div class="space-y-1">
-              <label for="task-priority" class="text-sm font-medium text-text-secondary">Priority</label>
-              <select
-                id="task-priority"
-                v-model="createForm.priority"
-                class="block w-full rounded-md border border-border px-3 py-2 bg-surface text-text shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
-                required
-                :disabled="isSaving"
-              >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-              </select>
+            <div class="space-y-1.5">
+              <label for="task-priority" class="label-uppercase-tracked block">Priority</label>
+              <div class="relative">
+                <select
+                  id="task-priority"
+                  v-model="createForm.priority"
+                  class="appearance-none block w-full rounded-lg border border-border bg-surface pl-3 pr-10 py-2.5 text-sm text-text-secondary hover:border-border-strong focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer disabled:cursor-not-allowed outline-none"
+                  required
+                  :disabled="isSaving"
+                >
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <svg class="h-4 w-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
 
           <!-- Assignee -->
-          <div class="space-y-1">
-            <label for="task-assignee" class="text-sm font-medium text-text-secondary">Assignee</label>
-            <select
-              id="task-assignee"
-              v-model="createForm.assigneeId"
-              class="block w-full rounded-md border border-border px-3 py-2 bg-surface text-text shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
-              :disabled="isSaving"
-            >
-              <option :value="null">Unassigned</option>
-              <option v-for="member in members" :key="member.id" :value="member.id">
-                {{ member.name }}
-              </option>
-            </select>
+          <div class="space-y-1.5">
+            <label for="task-assignee" class="label-uppercase-tracked block">Assignee</label>
+            <div class="relative">
+              <select
+                id="task-assignee"
+                v-model="createForm.assigneeId"
+                class="appearance-none block w-full rounded-lg border border-border bg-surface pl-3 pr-10 py-2.5 text-sm text-text-secondary hover:border-border-strong focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer disabled:cursor-not-allowed outline-none"
+                :disabled="isSaving"
+              >
+                <option :value="null">Unassigned</option>
+                <option v-for="member in members" :key="member.id" :value="member.id">
+                  {{ member.name }}
+                </option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg class="h-4 w-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
 
           <!-- Submit Button -->
-          <div class="pt-4 flex justify-end gap-3 border-t border-border/40">
+          <div class="pt-5 flex justify-end gap-3 border-t border-border/40">
             <button
               type="button"
               @click="handleClose"
-              class="inline-flex items-center justify-center rounded-md border border-border bg-surface px-4 py-2 text-sm font-medium text-text hover:bg-surface-2 transition-colors cursor-pointer"
+              class="inline-flex items-center justify-center rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-2 transition-all cursor-pointer outline-none focus:ring-4 focus:ring-border/50"
               :disabled="isSaving"
             >
               Cancel
             </button>
             <button
               type="submit"
-              class="inline-flex items-center justify-center rounded-md bg-primary hover:bg-primary-dark text-white px-4 py-2 text-sm font-medium transition-colors shadow-sm cursor-pointer disabled:opacity-50"
+              class="inline-flex items-center justify-center rounded-xl bg-primary hover:bg-primary-dark text-white px-5 py-2.5 text-sm font-medium transition-all shadow-md shadow-primary/20 hover:shadow-primary/30 cursor-pointer disabled:opacity-50 disabled:shadow-none shimmer-btn overflow-hidden outline-none focus:ring-4 focus:ring-primary/10"
               :disabled="isSaving || !createForm.title.trim()"
             >
-              <span v-if="isSaving">Creating...</span>
+              <span v-if="isSaving" class="flex items-center gap-2">
+                <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Creating...</span>
+              </span>
               <span v-else>Create Task</span>
             </button>
           </div>
@@ -493,34 +534,61 @@ const submitComment = async () => {
       </div>
 
       <div v-else-if="mode === 'view' && task" class="space-y-6">
-        <SheetHeader>
+        <SheetHeader class="space-y-2">
           <SheetTitle class="sr-only">Task Details</SheetTitle>
           <SheetDescription class="sr-only">View and edit details of this task.</SheetDescription>
-          <div class="flex items-center justify-between border-b border-border/40 pb-2">
-            <span class="font-mono text-xs text-text-muted">TASK-{{ task.id }}</span>
+          <div class="flex items-center justify-between border-b border-border/40 pb-3 mb-1">
+            <span class="font-mono text-xs text-text-muted tracking-wider bg-slate-50 border border-border/60 rounded-md px-2.5 py-1">TASK-{{ task.id }}</span>
             
             <!-- Saving Status Indicator -->
-            <span class="text-xs font-medium text-text-muted">
-              <span v-if="saveStatus === 'saving'" class="text-primary animate-pulse">Saving...</span>
-              <span v-else-if="saveStatus === 'saved'" class="text-accent-green">Saved ✓</span>
-              <span v-else-if="saveStatus === 'error'" class="text-accent-red">Save failed</span>
-            </span>
+            <div class="h-6 flex items-center">
+              <Transition
+                enter-active-class="transition duration-300 ease-out"
+                enter-from-class="opacity-0 translate-y-1"
+                enter-to-class="opacity-100 translate-y-0"
+                leave-active-class="transition duration-200 ease-in"
+                leave-from-class="opacity-100 translate-y-0"
+                leave-to-class="opacity-0 -translate-y-1"
+                mode="out-in"
+              >
+                <div v-if="saveStatus === 'saving'" :key="'saving'" class="inline-flex items-center gap-1.5 text-xs text-primary font-medium">
+                  <svg class="animate-spin h-3 w-3" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Saving...</span>
+                </div>
+                <div v-else-if="saveStatus === 'saved'" :key="'saved'" class="inline-flex items-center gap-1.5 text-xs text-accent-green font-medium">
+                  <svg class="h-3.5 w-3.5 text-accent-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Saved</span>
+                </div>
+                <div v-else-if="saveStatus === 'error'" :key="'error'" class="inline-flex items-center gap-1.5 text-xs text-accent-red font-medium">
+                  <svg class="h-3.5 w-3.5 text-accent-red" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <span>Save failed</span>
+                </div>
+              </Transition>
+            </div>
           </div>
           
           <!-- Presence Channel Avatars -->
-          <div class="pt-2">
+          <div class="pt-1">
             <PresenceAvatars :key="task.id" :task-id="task.id" :current-user-id="currentUserId" />
           </div>
         </SheetHeader>
 
         <!-- Inline Editable Title -->
-        <div class="space-y-1">
+        <div class="space-y-1 pt-2">
           <input
             type="text"
             v-model="editForm.title"
-            class="block w-full font-display text-xl font-bold text-text bg-transparent border border-transparent hover:border-border/60 focus:border-primary focus:bg-surface rounded px-2 py-1 focus:outline-none transition-all"
+            class="block w-full font-display text-2xl font-extrabold text-text bg-transparent border border-transparent hover:bg-slate-50/50 hover:border-border/60 rounded-xl px-3 py-2.5 focus:border-primary focus:bg-surface focus:shadow-lg focus:shadow-primary/5 focus:ring-4 focus:ring-primary/10 transition-all duration-200 outline-none"
             required
             :disabled="readOnly"
+            placeholder="Task Title"
           />
         </div>
 
@@ -531,10 +599,10 @@ const submitComment = async () => {
           <div class="md:col-span-2 space-y-6">
             <!-- Description -->
             <div class="space-y-2">
-              <label class="text-xs font-semibold text-text-secondary uppercase tracking-wider font-mono">Description</label>
+              <label class="label-uppercase-tracked block">Description</label>
               <textarea
                 v-model="editForm.description"
-                class="block w-full rounded-md border border-transparent hover:border-border/60 focus:border-border bg-transparent focus:bg-surface p-2 text-sm text-text h-40 resize-none focus:outline-none transition-all"
+                class="block w-full rounded-xl border border-transparent hover:bg-slate-50/50 hover:border-border/60 focus:border-primary bg-transparent focus:bg-surface p-3 text-sm text-text-secondary placeholder-text-muted/70 h-40 resize-none transition-all duration-200 focus:shadow-lg focus:shadow-primary/5 focus:ring-4 focus:ring-primary/10 outline-none"
                 placeholder="Add a detailed description for this task..."
                 :disabled="readOnly"
               />
@@ -545,40 +613,45 @@ const submitComment = async () => {
               <h4 class="text-sm font-semibold text-text font-display">Comments</h4>
               
               <!-- Comment List -->
-              <div v-if="comments.length > 0" class="space-y-4 max-h-[250px] overflow-y-auto pr-1">
+              <div v-if="comments.length > 0" class="space-y-4 max-h-[280px] overflow-y-auto pr-2 custom-scrollbar">
                 <div v-for="comment in comments" :key="comment.id" class="flex gap-3 text-sm">
                   <!-- User Avatar/Initials -->
-                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-semibold text-xs border border-primary/20 select-none">
+                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 text-primary flex items-center justify-center font-semibold text-xs border border-primary/15 shadow-sm select-none">
                     {{ getInitials(comment.user?.name) }}
                   </div>
                   <!-- Content & Time -->
-                  <div class="flex-1 space-y-1 bg-surface-2 p-3 rounded-lg border border-border">
+                  <div class="flex-1 space-y-1.5 bg-slate-50/70 p-3.5 rounded-xl border border-border/70 shadow-sm transition-all duration-200 hover:bg-slate-50 hover:border-border">
                     <div class="flex items-center justify-between">
-                      <span class="font-medium text-text text-xs">{{ comment.user?.name || 'Unknown User' }}</span>
-                      <span class="text-[10px] text-text-muted font-mono">{{ new Date(comment.created_at).toLocaleString() }}</span>
+                      <span class="font-semibold text-text text-xs">{{ comment.user?.name || 'Unknown User' }}</span>
+                      <span class="text-[10px] text-text-muted font-mono">{{ formatCommentDate(comment.created_at) }}</span>
                     </div>
-                    <p class="text-text-secondary whitespace-pre-line text-xs">{{ comment.content }}</p>
+                    <p class="text-text-secondary whitespace-pre-line text-xs leading-relaxed">{{ comment.content }}</p>
                   </div>
                 </div>
               </div>
-              <div v-else-if="commentsLoading" class="text-xs text-text-muted py-2">Loading comments...</div>
+              <div v-else-if="commentsLoading" class="text-xs text-text-muted py-2 italic animate-pulse">Loading comments...</div>
               <div v-else class="text-xs text-text-muted py-2 italic">No comments yet. Be the first to start the conversation!</div>
 
               <!-- Add Comment Form -->
-              <form @submit.prevent="submitComment" class="flex gap-2 items-start pt-2">
+              <form @submit.prevent="submitComment" class="flex gap-2.5 items-start pt-3 border-t border-border/20">
                 <textarea
                   v-model="newComment"
-                  class="block w-full rounded-md border border-border px-3 py-2 bg-surface text-xs text-text shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none h-14 resize-none"
-                  placeholder="Write a comment..."
+                  class="block w-full rounded-xl border border-border/80 px-4 py-3 bg-surface text-xs text-text-secondary placeholder-text-muted/65 shadow-inner-sm focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all h-16 resize-none outline-none"
+                  placeholder="Share feedback or update progress..."
                   required
                   :disabled="isSubmittingComment"
                 />
                 <button
                   type="submit"
-                  class="flex-shrink-0 inline-flex items-center justify-center rounded-md bg-primary hover:bg-primary-dark text-white px-3 py-2 text-xs font-medium transition-colors shadow-sm cursor-pointer disabled:opacity-50 h-14"
+                  class="flex-shrink-0 inline-flex items-center justify-center rounded-xl bg-primary hover:bg-primary-dark text-white px-4 py-2 text-xs font-semibold shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all cursor-pointer disabled:opacity-50 disabled:shadow-none h-16 shimmer-btn overflow-hidden outline-none focus:ring-4 focus:ring-primary/10"
                   :disabled="isSubmittingComment || !newComment.trim()"
                 >
-                  <span v-if="isSubmittingComment">...</span>
+                  <span v-if="isSubmittingComment" class="flex items-center justify-center">
+                    <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </span>
                   <span v-else>Post</span>
                 </button>
               </form>
@@ -586,52 +659,73 @@ const submitComment = async () => {
           </div>
 
           <!-- Right Column (Metadata Selectors) -->
-          <div class="space-y-4 bg-surface-2 rounded-xl p-4 border border-border">
+          <div class="space-y-5 bg-slate-50/50 rounded-xl p-5 border border-border/80 shadow-sm self-start">
             <!-- Status -->
-            <div class="space-y-1">
-              <label for="edit-status" class="text-xs font-semibold text-text-secondary uppercase tracking-wider font-mono">Status</label>
-              <select
-                id="edit-status"
-                v-model="editForm.status"
-                class="block w-full rounded-md border border-border bg-surface px-2 py-1 text-xs text-text focus:border-primary focus:outline-none"
-                :disabled="readOnly"
-              >
-                <option value="backlog">Backlog</option>
-                <option value="in_progress">In Progress</option>
-                <option value="in_review">In Review</option>
-                <option value="done">Done</option>
-              </select>
+            <div class="space-y-1.5">
+              <label for="edit-status" class="label-uppercase-tracked block">Status</label>
+              <div class="relative">
+                <select
+                  id="edit-status"
+                  v-model="editForm.status"
+                  class="appearance-none block w-full rounded-lg border border-border bg-surface pl-3 pr-10 py-2.5 text-xs text-text-secondary hover:border-border-strong focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer disabled:cursor-not-allowed outline-none"
+                  :disabled="readOnly"
+                >
+                  <option value="backlog">Backlog</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="in_review">In Review</option>
+                  <option value="done">Done</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <svg class="h-4 w-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
 
             <!-- Priority -->
-            <div class="space-y-1">
-              <label for="edit-priority" class="text-xs font-semibold text-text-secondary uppercase tracking-wider font-mono">Priority</label>
-              <select
-                id="edit-priority"
-                v-model="editForm.priority"
-                class="block w-full rounded-md border border-border bg-surface px-2 py-1 text-xs text-text focus:border-primary focus:outline-none"
-                :disabled="readOnly"
-              >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-              </select>
+            <div class="space-y-1.5">
+              <label for="edit-priority" class="label-uppercase-tracked block">Priority</label>
+              <div class="relative">
+                <select
+                  id="edit-priority"
+                  v-model="editForm.priority"
+                  class="appearance-none block w-full rounded-lg border border-border bg-surface pl-3 pr-10 py-2.5 text-xs text-text-secondary hover:border-border-strong focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer disabled:cursor-not-allowed outline-none"
+                  :disabled="readOnly"
+                >
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <svg class="h-4 w-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
 
             <!-- Assignee -->
-            <div class="space-y-1">
-              <label for="edit-assignee" class="text-xs font-semibold text-text-secondary uppercase tracking-wider font-mono">Assignee</label>
-              <select
-                id="edit-assignee"
-                v-model="editForm.assigneeId"
-                class="block w-full rounded-md border border-border bg-surface px-2 py-1 text-xs text-text focus:border-primary focus:outline-none"
-                :disabled="readOnly"
-              >
-                <option :value="null">Unassigned</option>
-                <option v-for="member in members" :key="member.id" :value="member.id">
-                  {{ member.name }}
-                </option>
-              </select>
+            <div class="space-y-1.5">
+              <label for="edit-assignee" class="label-uppercase-tracked block">Assignee</label>
+              <div class="relative">
+                <select
+                  id="edit-assignee"
+                  v-model="editForm.assigneeId"
+                  class="appearance-none block w-full rounded-lg border border-border bg-surface pl-3 pr-10 py-2.5 text-xs text-text-secondary hover:border-border-strong focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer disabled:cursor-not-allowed outline-none"
+                  :disabled="readOnly"
+                >
+                  <option :value="null">Unassigned</option>
+                  <option v-for="member in members" :key="member.id" :value="member.id">
+                    {{ member.name }}
+                  </option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <svg class="h-4 w-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -641,23 +735,23 @@ const submitComment = async () => {
           <div v-if="!showDeleteConfirm">
             <button
               @click="showDeleteConfirm = true"
-              class="text-xs font-medium text-accent-red hover:underline cursor-pointer"
+              class="text-xs font-semibold text-accent-red hover:text-accent-red/80 hover:underline cursor-pointer transition-all outline-none"
             >
               Delete Task
             </button>
           </div>
           <div v-else class="flex items-center gap-3">
-            <span class="text-xs text-text font-medium">Are you sure?</span>
+            <span class="text-xs text-text-secondary font-medium">Are you sure?</span>
             <button
               @click="submitDelete"
-              class="text-xs font-medium bg-accent-red hover:bg-accent-red/90 text-white rounded px-2.5 py-1.5 cursor-pointer"
+              class="text-xs font-semibold bg-accent-red hover:bg-accent-red-dark text-white rounded-lg px-3 py-1.5 cursor-pointer transition-all shadow-sm shadow-accent-red/10"
               :disabled="isSaving"
             >
               Delete
             </button>
             <button
               @click="showDeleteConfirm = false"
-              class="text-xs font-medium text-text-secondary hover:underline cursor-pointer"
+              class="text-xs font-semibold text-text-muted hover:text-text-secondary transition-all cursor-pointer outline-none"
               :disabled="isSaving"
             >
               Cancel
