@@ -25,7 +25,7 @@
             <!-- Badge Count -->
             <span
                 v-if="unreadCount > 0"
-                :class="['absolute top-1.5 right-1.5 inline-flex items-center justify-center min-w-5 h-5 px-1 text-[10px] font-bold leading-none text-white bg-accent-red rounded-full shadow-sm border-2 border-surface transform translate-x-1/4 -translate-y-1/4 select-none', shouldPop ? 'badge-pop' : '']"
+                :class="['absolute top-1.5 right-1.5 inline-flex items-center justify-center min-w-5 h-5 px-1 text-[10px] font-bold leading-none text-white bg-primary rounded-full shadow-sm border-2 border-surface transform translate-x-1/4 -translate-y-1/4 select-none', shouldPop ? 'badge-pop' : 'pulse-badge']"
             >
                 {{ unreadCount > 99 ? '99+' : unreadCount }}
             </span>
@@ -34,7 +34,7 @@
         <!-- Dropdown Menu -->
         <div
             v-if="isOpen"
-            class="absolute right-0 mt-2 w-80 md:w-96 bg-surface/95 backdrop-blur-md border border-border rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
+            class="absolute right-0 mt-2 w-80 md:w-96 bg-surface/90 backdrop-blur-xl border border-border/60 rounded-xl shadow-[0_20px_50px_-12px_rgba(99,102,241,0.12),_0_0_1px_1px_rgba(99,102,241,0.03)] z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
         >
             <!-- Dropdown Header -->
             <div class="px-4 py-3 border-b border-border/60 bg-surface/50 flex items-center justify-between">
@@ -42,7 +42,7 @@
                     <span class="font-display font-semibold text-text text-sm">Notifications</span>
                     <span 
                         v-if="unreadCount > 0" 
-                        class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full select-none"
+                        class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full select-none animate-pulse"
                     >
                         {{ unreadCount }} new
                     </span>
@@ -50,7 +50,7 @@
                 <button
                     v-if="notifications.length > 0"
                     @click="clearNotifications"
-                    class="text-xs text-primary hover:text-primary-dark font-medium transition-colors cursor-pointer focus:outline-none"
+                    class="font-display text-xs text-primary hover:text-primary-dark font-semibold transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 px-2.5 py-1.5 rounded-lg bg-primary/5 hover:bg-primary/10 active:scale-95"
                 >
                     Clear all
                 </button>
@@ -59,15 +59,49 @@
             <!-- Dropdown Body -->
             <div class="py-1">
                 <!-- Empty State -->
-                <div v-if="notifications.length === 0" class="flex flex-col items-center justify-center py-10 px-6 text-center select-none">
-                    <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-text-muted border border-slate-100 mb-3 animate-pulse">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-60">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                <div v-if="notifications.length === 0" class="flex flex-col items-center justify-center py-12 px-6 text-center select-none">
+                    <div class="relative flex items-center justify-center mb-4 text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="w-24 h-24" fill="none">
+                            <!-- Outer concentric ring 1 (very faint, rotating) -->
+                            <circle cx="60" cy="60" r="48" stroke="currentColor" stroke-width="1" stroke-dasharray="3 6" class="text-primary/20 ring-spin" />
+                            
+                            <!-- Concentric ring 2 -->
+                            <circle cx="60" cy="60" r="38" stroke="currentColor" stroke-width="1.2" class="text-primary/30" />
+                            
+                            <!-- Concentric ring 3 (pulsing) -->
+                            <circle cx="60" cy="60" r="28" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 2" class="text-primary/45 ring-pulse" />
+                            
+                            <!-- Glow and Ring behind the bell -->
+                            <circle cx="60" cy="60" r="18" fill="currentColor" class="text-primary/5 dark:text-primary/10" />
+                            <circle cx="60" cy="60" r="18" stroke="currentColor" stroke-width="1.5" class="text-primary/60" />
+                            
+                            <!-- Bell Icon at the center -->
+                            <g transform="translate(48, 48)">
+                                <path 
+                                    d="M12 4a4 4 0 0 0-4 4v5H6v2h12v-2h-2V8a4 4 0 0 0-4-4z" 
+                                    fill="currentColor" 
+                                    class="text-primary/20"
+                                />
+                                <path 
+                                    d="M12 3a5 5 0 0 0-5 5v5H5v2h14v-2h-2V8a5 5 0 0 0-5-5z" 
+                                    stroke="currentColor" 
+                                    stroke-width="1.8" 
+                                    stroke-linecap="round" 
+                                    stroke-linejoin="round" 
+                                    class="text-primary"
+                                />
+                                <path 
+                                    d="M9.5 17a2.5 2.5 0 0 0 5 0" 
+                                    stroke="currentColor" 
+                                    stroke-width="1.8" 
+                                    stroke-linecap="round"
+                                    class="text-primary"
+                                />
+                            </g>
                         </svg>
                     </div>
-                    <p class="text-sm font-semibold text-text mb-1">All caught up!</p>
-                    <p class="text-xs text-text-secondary max-w-[220px] leading-relaxed">
+                    <h3 class="text-sm font-display font-semibold text-text mb-1.5">All caught up!</h3>
+                    <p class="text-xs text-text-secondary max-w-[240px] leading-relaxed">
                         You'll receive updates when tasks are moved, comments added, or assigned to you.
                     </p>
                 </div>
@@ -77,10 +111,10 @@
                     <li
                         v-for="(notification, index) in notifications"
                         :key="index"
-                        class="px-4 py-3 hover:bg-slate-50/50 transition-colors flex gap-3 align-top"
+                        class="group px-4 py-3 hover:bg-slate-50/70 transition-all duration-200 ease-out flex gap-3 align-top cursor-default"
                     >
                         <!-- Event-Specific Icon -->
-                        <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center self-start" :class="getIconBgClass(notification.type)">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center self-start transform group-hover:scale-105 transition-transform duration-200" :class="getIconBgClass(notification.type)">
                             <!-- Task Moved -->
                             <svg v-if="notification.type === 'moved'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4" :class="getIconColorClass(notification.type)">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0-4.5 4.5M21 7.5H7.5" />
@@ -191,9 +225,13 @@ const parseMessage = (message) => {
 };
 
 const getIconBgClass = (type) => {
-    if (type === 'moved') return 'bg-blue-50 dark:bg-blue-950/30 border border-blue-100/50 dark:border-blue-900/30';
-    if (type === 'assigned') return 'bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100/50 dark:border-emerald-900/30';
-    return 'bg-purple-50 dark:bg-purple-950/30 border border-purple-100/50 dark:border-purple-900/30';
+    if (type === 'moved') {
+        return 'bg-blue-50/80 dark:bg-blue-950/20 border border-blue-100/80 dark:border-blue-900/40 shadow-sm shadow-blue-100/10';
+    }
+    if (type === 'assigned') {
+        return 'bg-emerald-50/80 dark:bg-emerald-950/20 border border-emerald-100/80 dark:border-emerald-900/40 shadow-sm shadow-emerald-100/10';
+    }
+    return 'bg-purple-50/80 dark:bg-purple-950/20 border border-purple-100/80 dark:border-purple-900/40 shadow-sm shadow-purple-100/10';
 };
 
 const getIconColorClass = (type) => {
@@ -280,11 +318,57 @@ onUnmounted(() => {
     100% { transform: translate(25%, -25%) scale(1); opacity: 1; }
 }
 
+@keyframes pulse-badge {
+    0% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 5px rgba(99, 102, 241, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+    }
+}
+
+@keyframes ring-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes ring-pulse {
+    0%, 100% {
+        stroke-width: 1.2px;
+        opacity: 0.4;
+    }
+    50% {
+        stroke-width: 2px;
+        opacity: 0.8;
+    }
+}
+
 .bell-jiggle:hover svg {
     animation: jiggle 0.4s ease-in-out;
 }
 
 .badge-pop {
     animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.pulse-badge {
+    animation: pulse-badge 2s infinite;
+}
+
+.ring-spin {
+    transform-origin: center;
+    animation: ring-spin 60s linear infinite;
+}
+
+.ring-pulse {
+    transform-origin: center;
+    animation: ring-pulse 3s ease-in-out infinite;
 }
 </style>
