@@ -15,6 +15,8 @@ use App\Enums\WorkspaceRole;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class DemoSeeder extends Seeder
 {
@@ -87,19 +89,30 @@ class DemoSeeder extends Seeder
             'name' => 'Vance Russel LLC',
         ]);
 
+        $registrar = app(PermissionRegistrar::class);
+
+        // Helper to attach user to workspace pivot and assign Spatie team role
+        $attachWorkspaceUser = function(Workspace $workspace, User $user, WorkspaceRole $role) use ($registrar) {
+            $workspace->users()->attach($user->id, ['role' => $role->value]);
+            
+            $registrar->setPermissionsTeamId($workspace->id);
+            $roleModel = Role::findOrCreate($role->value, 'web');
+            $user->assignRole($roleModel);
+        };
+
         // Attach users to MCBERNARD CAMP
-        $workspaceCamp->users()->attach($primaryUser->id, ['role' => WorkspaceRole::Admin->value]);
-        $workspaceCamp->users()->attach($sarah->id, ['role' => WorkspaceRole::Admin->value]);
-        $workspaceCamp->users()->attach($alex->id, ['role' => WorkspaceRole::Member->value]);
-        $workspaceCamp->users()->attach($jessica->id, ['role' => WorkspaceRole::Member->value]);
-        $workspaceCamp->users()->attach($marcus->id, ['role' => WorkspaceRole::Viewer->value]);
+        $attachWorkspaceUser($workspaceCamp, $primaryUser, WorkspaceRole::Admin);
+        $attachWorkspaceUser($workspaceCamp, $sarah, WorkspaceRole::Admin);
+        $attachWorkspaceUser($workspaceCamp, $alex, WorkspaceRole::Member);
+        $attachWorkspaceUser($workspaceCamp, $jessica, WorkspaceRole::Member);
+        $attachWorkspaceUser($workspaceCamp, $marcus, WorkspaceRole::Viewer);
 
         // Attach users to Vance Russel LLC
-        $workspaceRussel->users()->attach($primaryUser->id, ['role' => WorkspaceRole::Admin->value]);
-        $workspaceRussel->users()->attach($marcus->id, ['role' => WorkspaceRole::Admin->value]);
-        $workspaceRussel->users()->attach($alex->id, ['role' => WorkspaceRole::Member->value]);
-        $workspaceRussel->users()->attach($jessica->id, ['role' => WorkspaceRole::Member->value]);
-        $workspaceRussel->users()->attach($sarah->id, ['role' => WorkspaceRole::Viewer->value]);
+        $attachWorkspaceUser($workspaceRussel, $primaryUser, WorkspaceRole::Admin);
+        $attachWorkspaceUser($workspaceRussel, $marcus, WorkspaceRole::Admin);
+        $attachWorkspaceUser($workspaceRussel, $alex, WorkspaceRole::Member);
+        $attachWorkspaceUser($workspaceRussel, $jessica, WorkspaceRole::Member);
+        $attachWorkspaceUser($workspaceRussel, $sarah, WorkspaceRole::Viewer);
 
         // 3. Create workspace-level labels for MCBERNARD CAMP
         $labelsCamp = [
