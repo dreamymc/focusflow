@@ -148,6 +148,7 @@ const handleTaskMoved = async ({ taskId, fromColumn, toColumn, newIndex, oldInde
 </script>
 
 <template>
+  <!-- Main board layout container with horizontal scrollability and custom scrollbar styles -->
   <div class="flex items-start gap-6 overflow-x-auto pb-4 scrollbar-thin select-none">
     <KanbanColumn
       v-for="column in localColumns"

@@ -247,18 +247,18 @@ const handleTaskDeleted = (taskId) => {
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <!-- Breadcrumbs -->
-            <div class="flex items-center gap-2 text-xs text-text-secondary font-medium mb-1">
-              <Link :href="`/workspaces/${workspace.id}/projects`" class="hover:text-primary transition-colors">
+            <div class="flex items-center gap-2 text-[10px] uppercase tracking-wider text-text-secondary font-display font-bold mb-1.5">
+              <Link :href="`/workspaces/${workspace.id}/projects`" class="hover:text-primary transition-all duration-150">
                 Projects
               </Link>
               <span class="text-text-muted">/</span>
-              <span class="text-text-muted font-normal">{{ project.name }}</span>
+              <span class="text-text-muted font-normal normal-case tracking-normal">{{ project.name }}</span>
             </div>
 
             <!-- Title header -->
             <div class="flex items-center gap-3">
-              <ColorIcon :name="project.name" :id="project.id" size="lg" />
-              <h1 class="font-display text-2xl font-bold text-text">{{ project.name }}</h1>
+              <ColorIcon :name="project.name" :id="project.id" size="lg" class="shadow-sm border border-border" />
+              <h1 class="font-display text-2xl font-bold text-text tracking-tight">{{ project.name }}</h1>
             </div>
           </div>
 
@@ -266,7 +266,7 @@ const handleTaskDeleted = (taskId) => {
           <div v-if="isMember && !isViewer">
             <button
               @click="openCreateTaskModal('backlog')"
-              class="inline-flex items-center justify-center rounded-md bg-primary hover:bg-primary-dark text-white px-4 py-2 text-sm font-medium transition-colors shadow-sm gap-1 cursor-pointer"
+              class="inline-flex items-center justify-center rounded-lg bg-primary hover:bg-primary-dark active:scale-[0.98] text-white px-4 py-2 text-xs font-semibold uppercase tracking-wider font-display transition-all duration-200 shadow-md hover:shadow-lg hover:shadow-primary/25 gap-1.5 cursor-pointer"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />

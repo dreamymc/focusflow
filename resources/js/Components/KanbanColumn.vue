@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { usePermissions } from '../Composables/usePermissions';
 import TaskCard from './TaskCard.vue';
@@ -39,6 +39,15 @@ const onDragEnd = (event) => {
     oldIndex: event.oldIndex
   });
 };
+
+const columnTintClass = computed(() => {
+  return {
+    'backlog': 'bg-slate-50/40 border-slate-100/50',
+    'in_progress': 'bg-blue-50/20 border-blue-100/30',
+    'in_review': 'bg-amber-50/20 border-amber-100/30',
+    'done': 'bg-emerald-50/20 border-emerald-100/30'
+  }[props.column.id] || 'bg-surface-3/30 border-transparent';
+});
 </script>
 
 <template>
@@ -63,9 +72,10 @@ const onDragEnd = (event) => {
       :disabled="readOnly"
       @end="onDragEnd"
       draggable=".task-card-wrapper"
-      class="kanban-column-body flex-1 overflow-y-auto bg-surface-3/30 border border-transparent rounded-xl p-2 min-h-[450px] transition-all duration-200"
+      class="kanban-column-body flex-1 overflow-y-auto border rounded-xl p-2 min-h-[450px] transition-all duration-200"
+      :class="columnTintClass"
       ghost-class="sortable-ghost"
-      drag-class="rotate-[1deg]"
+      drag-class="drag-active"
     >
       <!-- Task Cards -->
       <div
@@ -95,7 +105,7 @@ const onDragEnd = (event) => {
     <div v-if="!readOnly && isMember" class="mt-2">
       <button
         @click="emit('create-task', column.id)"
-        class="w-full flex items-center justify-center py-2 px-3 rounded-lg border border-dashed border-border hover:border-border-strong text-xs font-medium text-text-muted hover:text-text hover:bg-surface-2 transition-all duration-200 cursor-pointer"
+        class="w-full flex items-center justify-center py-2 px-3 rounded-lg border border-dashed border-border hover:border-primary-dark/40 hover:bg-primary-light/30 hover:text-primary text-xs font-medium text-text-muted transition-all duration-150 cursor-pointer"
       >
         + Add task
       </button>
@@ -112,5 +122,13 @@ const onDragEnd = (event) => {
   outline-offset: -2px;
   background-color: rgba(59, 130, 246, 0.05) !important;
 }
+.drag-active {
+  opacity: 0.95;
+  transform: rotate(1deg) !important;
+  background-color: #EEF2FF !important;
+  cursor: grabbing !important;
+}
+.drag-active :deep(.bg-surface) {
+  background-color: #EEF2FF !important;
+}
 </style>
-

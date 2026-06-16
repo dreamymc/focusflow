@@ -41,72 +41,96 @@ const onClick = (e) => {
   emit('task-clicked', props.task.id);
 };
 
-const firstAssignee = computed(() => {
-  return props.task.assignees && props.task.assignees.length > 0
-    ? props.task.assignees[0]
-    : null;
-});
-
 const getInitials = (name) => {
   if (!name) return '?';
   return name.trim().split(/\s+/).map(n => n[0]).slice(0, 2).join('').toUpperCase();
 };
 
-const priorityColorClass = computed(() => {
-  if (!props.task.priority) return null;
+const priorityBorderClass = computed(() => {
+  if (!props.task.priority) return 'border-l-border';
   const p = typeof props.task.priority === 'object' ? props.task.priority.value : props.task.priority;
   return {
-    'high': 'bg-accent-red',
-    'medium': 'bg-accent-yellow',
-    'low': 'bg-accent-green'
-  }[p] || null;
+    'high': 'border-l-accent-red',
+    'medium': 'border-l-accent-yellow',
+    'low': 'border-l-accent-green'
+  }[p] || 'border-l-border';
 });
 
-const priorityLabel = computed(() => {
-  if (!props.task.priority) return '';
-  return typeof props.task.priority === 'object' ? props.task.priority.label : props.task.priority;
-});
+const isOverdue = (dateString) => {
+  if (!dateString) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const due = new Date(dateString);
+  return due < today;
+};
+
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+};
 </script>
 
 <template>
   <div
-    class="bg-surface rounded-lg border border-border p-3 shadow-sm select-none transition-all duration-200"
+    class="bg-surface rounded-lg border border-t-border border-r-border border-b-border border-l-4 p-3 shadow-sm select-none transition-all duration-200"
     :class="[
+      priorityBorderClass,
       readOnly
         ? 'cursor-default'
-        : 'cursor-grab active:cursor-grabbing hover:shadow-md hover:translate-y-[-1px] hover:border-border-strong',
+        : 'cursor-grab active:cursor-grabbing hover:shadow-md hover:translate-y-[-2px] hover:border-border-strong',
       task.shaking ? 'animate-shake' : ''
     ]"
     @mousedown="onMouseDown"
     @mouseup="onMouseUp"
     @click="onClick"
   >
-    <!-- Top row: Priority dot & Title -->
+    <!-- Top row: Title -->
     <div class="flex items-start justify-between gap-2">
-      <h4 class="text-sm font-medium text-text line-clamp-2 leading-snug pr-4">
+      <h4 class="text-sm font-medium text-text line-clamp-2 leading-snug">
         {{ task.title }}
       </h4>
-      <div
-        v-if="priorityColorClass"
-        class="w-2.5 h-2.5 rounded-full shrink-0 mt-1"
-        :class="priorityColorClass"
-        :title="`Priority: ${priorityLabel}`"
-      />
     </div>
 
-    <!-- Bottom row: Task ID & Assignee -->
+    <!-- Bottom row: Task ID, Due Date & Assignees -->
     <div class="flex items-center justify-between mt-3 pt-2 border-t border-border/40">
-      <span class="font-mono text-[10px] text-text-muted">
-        TASK-{{ task.id }}
-      </span>
+      <div class="flex items-center gap-2">
+        <span class="font-mono text-[10px] text-text-muted">
+          TASK-{{ task.id }}
+        </span>
+        <span
+          v-if="task.due_date"
+          class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border transition-colors duration-150"
+          :class="isOverdue(task.due_date)
+            ? 'text-accent-red bg-accent-red/5 border-accent-red/20 font-semibold'
+            : 'text-text-secondary bg-surface-2 border-border'"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-2.5 h-2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+          </svg>
+          {{ formatDate(task.due_date) }}
+        </span>
+      </div>
 
-      <!-- Assignee avatar initials -->
-      <div
-        v-if="firstAssignee"
-        class="w-5 h-5 rounded-full bg-primary-light text-primary flex items-center justify-center font-semibold text-[9px] font-display"
-        :title="firstAssignee.name"
-      >
-        {{ getInitials(firstAssignee.name) }}
+      <!-- Assignees avatar group -->
+      <div v-if="task.assignees && task.assignees.length > 0" class="flex -space-x-1.5 overflow-hidden items-center">
+        <div
+          v-for="(assignee, index) in task.assignees.slice(0, 3)"
+          :key="assignee.id || index"
+          class="w-5 h-5 rounded-full bg-primary-light text-primary flex items-center justify-center font-semibold text-[9px] font-display border-2 border-surface shrink-0"
+          :style="{ zIndex: 10 - index }"
+          :title="assignee.name"
+        >
+          {{ getInitials(assignee.name) }}
+        </div>
+        <div
+          v-if="task.assignees.length > 3"
+          class="w-5 h-5 rounded-full bg-surface-3 text-text-secondary flex items-center justify-center font-medium text-[8px] font-display border-2 border-surface shrink-0"
+          :style="{ zIndex: 5 }"
+          :title="`${task.assignees.length - 3} more`"
+        >
+          +{{ task.assignees.length - 3 }}
+        </div>
       </div>
     </div>
   </div>
