@@ -39,7 +39,7 @@ class WorkspaceSwitchController extends Controller
                     $newPath = "/workspaces/{$targetWorkspaceId}" . $subPath;
                 }
 
-                if (is_array($parsedUrl) && isset($parsedUrl['query'])) {
+                if (isset($parsedUrl['query'])) {
                     $newPath .= '?' . $parsedUrl['query'];
                 }
 
